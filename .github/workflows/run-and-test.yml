@@ -37,10 +37,11 @@ jobs:
             AUTH_HEADER=$(echo -n ":$ADO_PAT" | base64)
             
             # Trigger the pipeline
-            curl -X POST \
+            curl -v -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: Basic $AUTH_HEADER" \
-            -d '{}' \
+            -H "Accept: application/json" \
+            -d '{"resources": {"repositories": {"self": {"refName": "refs/heads/main"}}}}' \
             "https://dev.azure.com/$ORGANIZATION/$PROJECT/_apis/pipelines/$PIPELINE_ID/runs?api-version=7.1"
             
             echo "Pipeline triggered successfully."
