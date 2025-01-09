@@ -108,6 +108,7 @@ resource "azurerm_role_assignment" "subnet_join" {
 data "azuredevops_agent_queue" "this" {
   project_id = var.ado_project_id
   name       = module.managed_devops_pool.name
+  depends_on = [module.managed_devops_pool]
 }
 
 data "azuredevops_build_definition" "example" {
