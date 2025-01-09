@@ -24,7 +24,8 @@ jobs:
 
     steps:
 
-      - name: Trigger Azure DevOps Pipeline
+      - shell: bash
+        name: Trigger Azure DevOps Pipeline
         if: success()
         env:
             ADO_PAT: ${{ secrets.ADO_PAT }}
