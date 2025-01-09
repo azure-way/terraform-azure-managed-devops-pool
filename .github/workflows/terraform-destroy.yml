@@ -2,11 +2,19 @@ name: Terraform destroy
 on:
   workflow_call:
     inputs:
-
       backend_key:
         required: true
         type: string
-
+      ado_project_id:
+        required: true
+        type: string
+      pipeline_id:
+        required: true
+        type: string
+      azure_devops_organization_name:
+        required: true
+        type: string
+        
 jobs:
   terraform_destroy:
     runs-on: ubuntu-latest
@@ -31,5 +39,5 @@ jobs:
     
       - name: Terraform Destroy
         id: destroy
-        run: terraform destroy --auto-approve -input=false -var="spn-client-id=${{secrets.spn_client_id}}" -var="spn-client-secret=${{secrets.spn_client_secret}}" -var="spn-tenant-id=${{secrets.AZURE_TENANT_ID}}" -var="subscription-id=${{secrets.subscription_id}}" 
+        run: terraform destroy --auto-approve -input=false -var="spn-client-id=${{secrets.SPN_CLIENT_ID}}" -var="spn-client-secret=${{secrets.SPN_CLIENT_SECRET}}" -var="spn-tenant-id=${{secrets.AZURE_TENANT_ID}}" -var="subscription-id=${{secrets.subscription_id}}" -var="ado_project_id=${{ inputs.ado_project_id }}" -var="pipeline_id=${{ inputs.pipeline_id }}" -var="azure_devops_organization_name=${{ inputs.azure_devops_organization_name }}"
         continue-on-error: false            

@@ -19,7 +19,7 @@ variable "enable_telemetry" {
 variable "maximum_concurrency" {
   type        = number
   description = "The maximum number of concurrent jobs that can run on the pool."
-  default     = 2
+  default     = 4
   
 }
 variable "address_space" {

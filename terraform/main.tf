@@ -4,28 +4,25 @@ locals {
 
 data "azurerm_client_config" "this" {}
 
-resource "random_string" "name" {
-  length  = 6
-  numeric = true
-  special = false
-  upper   = false
+resource "random_pet" "name" {
+  length  = 1
 }
 
 resource "azurerm_resource_group" "this" {
   location = var.region
-  name     = "rg-${random_string.name.result}"
+  name     = "rg-${random_pet.name.result}"
 }
 
 resource "azurerm_log_analytics_workspace" "this" {
   location            = azurerm_resource_group.this.location
-  name                = "${random_string.name.result}-law"
+  name                = "${random_pet.name.result}-law"
   resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_role_definition" "this" {
-  name        = "Virtual Network Contributor for DevOpsInfrastructure (${random_string.name.result})"
+  name        = "Virtual Network Contributor for DevOpsInfrastructure (${random_pet.name.result})"
   scope       = azurerm_resource_group.this.id
-  description = "Custom Role for Virtual Network Contributor for DevOpsInfrastructure (${random_string.name.result})"
+  description = "Custom Role for Virtual Network Contributor for DevOpsInfrastructure (${random_pet.name.result})"
 
   permissions {
     actions = [
@@ -44,14 +41,14 @@ data "azuread_service_principal" "this" {
 resource "azurerm_public_ip" "this" {
   allocation_method   = "Static"
   location            = azurerm_resource_group.this.location
-  name                = "${random_string.name.result}-pip"
+  name                = "${random_pet.name.result}-pip"
   resource_group_name = azurerm_resource_group.this.name
   sku                 = "Standard"
 }
 
 resource "azurerm_nat_gateway" "this" {
   location            = azurerm_resource_group.this.location
-  name                = "${random_string.name.result}-nat"
+  name                = "${random_pet.name.result}-nat"
   resource_group_name = azurerm_resource_group.this.name
   sku_name            = "Standard"
 }
@@ -62,7 +59,7 @@ resource "azurerm_nat_gateway_public_ip_association" "this" {
 }
 
 resource "azurerm_virtual_network" "this" {
-  name                = "${random_string.name.result}-vnet"
+  name                = "${random_pet.name.result}-vnet"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   address_space       = var.address_space
@@ -123,51 +120,16 @@ resource "azuredevops_pipeline_authorization" "this" {
   pipeline_id = var.pipeline_id
 }
 
-# module "virtual_network" {
-#   source              = "Azure/avm-res-network-virtualnetwork/azurerm"
-#   version             = "0.4.0"
-#   address_space       = ["10.30.0.0/16"]
-#   location            = azurerm_resource_group.this.location
-#   name                = "vnet-${random_string.name.result}"
-#   resource_group_name = azurerm_resource_group.this.name
-#   role_assignments = {
-#     virtual_network_reader = {
-#       role_definition_id_or_name = "Reader"
-#       principal_id               = data.azuread_service_principal.this.object_id
-#     }
-#     subnet_join = {
-#       role_definition_id_or_name = azurerm_role_definition.this.role_definition_resource_id
-#       principal_id               = data.azuread_service_principal.this.object_id
-#     }
-#   }
-#   subnets = {
-#     subnet0 = {
-#       name             = "subnet-${random_string.name.result}"
-#       address_prefixes = ["10.30.0.0/24"]
-#       delegation = [{
-#         name = "Microsoft.DevOpsInfrastructure.pools"
-#         service_delegation = {
-#           name = "Microsoft.DevOpsInfrastructure/pools"
-#         }
-#       }]
-#       nat_gateway = {
-#         id = azurerm_nat_gateway.this.id
-#       }
-#     }
-#   }
-#   enable_telemetry = var.enable_telemetry
-# }
-
 resource "azurerm_dev_center" "this" {
   location            = azurerm_resource_group.this.location
-  name                = "dc-${random_string.name.result}"
+  name                = "dc-${random_pet.name.result}"
   resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_dev_center_project" "this" {
   dev_center_id       = azurerm_dev_center.this.id
   location            = azurerm_resource_group.this.location
-  name                = "dcp-${random_string.name.result}"
+  name                = "dcp-${random_pet.name.result}"
   resource_group_name = azurerm_resource_group.this.name
 }
 

@@ -3,14 +3,13 @@ run-name: Azure Managed Pool - Basic setup test
 
 on:
     schedule:
-        - cron: "15 06 * * 2"   # <=== Change this value    
+        - cron: "15 06 * * 2" 
     workflow_dispatch:
     
 env:
   BadgeName: 'AzureManagedPool'
   BadgeLabel: 'AzureManagedPool'
 
-      
 jobs:
   RunTerraform:
     uses: ./.github/workflows/terraform-execute.yml
@@ -21,7 +20,7 @@ jobs:
       azure_devops_organization_name: 'azure-way'
     secrets: inherit
 
-  ValidateAPI:
+  ValidateManagedPool:
     runs-on: ubuntu-latest
     needs: RunTerraform
 
@@ -121,8 +120,11 @@ jobs:
             color: "#3272d3"   
 
   RunDestroyTerraform:
-    needs: ValidateAPI
+    needs: ValidateManagedPool
     uses: ./.github/workflows/terraform-destroy.yml
     with:
-      backend_key: 'managed-pool'
+        backend_key: 'managed-pool'
+        ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
+        pipeline_id: '1'
+        azure_devops_organization_name: 'azure-way'
     secrets: inherit     
