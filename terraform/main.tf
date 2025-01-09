@@ -170,6 +170,12 @@ resource "azurerm_dev_center_project" "this" {
   resource_group_name = azurerm_resource_group.this.name
 }
 
+resource "time_sleep" "wait_1_minute" {
+  create_duration = "1m"
+  
+  depends_on = [azurerm_role_assignment.reader, azurerm_role_assignment.subnet_join]
+}
+
 # This is the module call
 module "managed_devops_pool" {
   source  = "Azure/avm-res-devopsinfrastructure-pool/azurerm"
@@ -219,6 +225,6 @@ module "managed_devops_pool" {
   ]
   enable_telemetry = var.enable_telemetry
 
-  depends_on = [azurerm_role_assignment.reader, azurerm_role_assignment.subnet_join]
+  depends_on = [time_sleep.wait_1_minute]
 }
 
