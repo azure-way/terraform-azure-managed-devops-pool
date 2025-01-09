@@ -30,7 +30,7 @@ jobs:
             ADO_PAT: ${{ secrets.ADO_PAT }}
         run: |
             ORGANIZATION="azure-way"
-            PROJECT="basic-pipeline"
+            PROJECT="basic-pipelines"
             PIPELINE_ID="1"
 
             # Encode the PAT for authorization
