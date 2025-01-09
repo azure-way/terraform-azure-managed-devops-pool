@@ -41,7 +41,7 @@ jobs:
             -H "Authorization: Basic $AUTH_HEADER" \
             -H "Accept: application/json" \
             -d '{"resources": {"repositories": {"self": {"refName": "refs/heads/main"}}}}' \
-            "https://dev.azure.com/$ORGANIZATION/$PROJECT/_apis/pipelines/$PIPELINE_ID/runs?api-version=7.1"
+            "https://dev.azure.com/azure-way/basic-pipelines/_apis/pipelines/1/runs?api-version=7.1"
              
             echo "Pipeline triggered successfully."
     #   - name: Get current date
