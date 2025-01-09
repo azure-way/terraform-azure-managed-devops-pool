@@ -177,7 +177,7 @@ module "managed_devops_pool" {
 
   resource_group_name            = azurerm_resource_group.this.name
   location                       = azurerm_resource_group.this.location
-  name                           = "mdp-${random_string.name.result}"
+  name                           = "azure-way-mdp"
   dev_center_project_resource_id = azurerm_dev_center_project.this.id
   subnet_id                      = azurerm_subnet.this.id
   maximum_concurrency            = var.maximum_concurrency
