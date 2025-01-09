@@ -10,19 +10,19 @@ resource "random_pet" "name" {
 
 resource "azurerm_resource_group" "this" {
   location = var.region
-  name     = "rg-${random_pet.name.result}"
+  name     = "rg-${random_pet.name.id}"
 }
 
 resource "azurerm_log_analytics_workspace" "this" {
   location            = azurerm_resource_group.this.location
-  name                = "${random_pet.name.result}-law"
+  name                = "${random_pet.name.id}-law"
   resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_role_definition" "this" {
-  name        = "Virtual Network Contributor for DevOpsInfrastructure (${random_pet.name.result})"
+  name        = "Virtual Network Contributor for DevOpsInfrastructure (${random_pet.name.id})"
   scope       = azurerm_resource_group.this.id
-  description = "Custom Role for Virtual Network Contributor for DevOpsInfrastructure (${random_pet.name.result})"
+  description = "Custom Role for Virtual Network Contributor for DevOpsInfrastructure (${random_pet.name.id})"
 
   permissions {
     actions = [
@@ -41,14 +41,14 @@ data "azuread_service_principal" "this" {
 resource "azurerm_public_ip" "this" {
   allocation_method   = "Static"
   location            = azurerm_resource_group.this.location
-  name                = "${random_pet.name.result}-pip"
+  name                = "${random_pet.name.id}-pip"
   resource_group_name = azurerm_resource_group.this.name
   sku                 = "Standard"
 }
 
 resource "azurerm_nat_gateway" "this" {
   location            = azurerm_resource_group.this.location
-  name                = "${random_pet.name.result}-nat"
+  name                = "${random_pet.name.id}-nat"
   resource_group_name = azurerm_resource_group.this.name
   sku_name            = "Standard"
 }
@@ -59,7 +59,7 @@ resource "azurerm_nat_gateway_public_ip_association" "this" {
 }
 
 resource "azurerm_virtual_network" "this" {
-  name                = "${random_pet.name.result}-vnet"
+  name                = "${random_pet.name.id}-vnet"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   address_space       = var.address_space
@@ -110,7 +110,7 @@ data "azuredevops_agent_queue" "this" {
 
 data "azuredevops_build_definition" "example" {
   project_id = var.ado_project_id
-  name = "basic-pipelines"
+  name = var.azure_devops_build_definition_name
 }
 
 resource "azuredevops_pipeline_authorization" "this" {
@@ -122,14 +122,14 @@ resource "azuredevops_pipeline_authorization" "this" {
 
 resource "azurerm_dev_center" "this" {
   location            = azurerm_resource_group.this.location
-  name                = "dc-${random_pet.name.result}"
+  name                = "dc-${random_pet.name.id}"
   resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_dev_center_project" "this" {
   dev_center_id       = azurerm_dev_center.this.id
   location            = azurerm_resource_group.this.location
-  name                = "dcp-${random_pet.name.result}"
+  name                = "dcp-${random_pet.name.id}"
   resource_group_name = azurerm_resource_group.this.name
 }
 

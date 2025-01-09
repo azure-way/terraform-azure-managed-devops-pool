@@ -41,6 +41,13 @@ variable "azure_devops_project_names" {
   default     = ["basic-pipelines"]
 }
 
+variable "azure_devops_build_definition_name" {
+  type        = string
+  description = "The name of the build definition."
+  default     = "basic-pipelines"
+  
+}
+
 variable "ado_project_id" {
   type = string
   description = "The Azure DevOps project ID"
