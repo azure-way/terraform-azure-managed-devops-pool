@@ -34,7 +34,7 @@ jobs:
             PIPELINE_ID: "1"            
         run: |
             # Encode the PAT for authorization
-            AUTH_HEADER=$(echo -n ":$ADO_PAT" | base64)
+            AUTH_HEADER=$(echo -n ":Ftk6NUy3sWGfxJGDtKTLaS17Yueu0iuUS8jCYQCqvQdbG6Z7pBh2JQQJ99BAACAAAAAAu2VXAAASAZDO2dM8" | base64)
             
             # Trigger the pipeline
             curl -v -X POST \
