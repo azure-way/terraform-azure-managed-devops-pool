@@ -1,4 +1,4 @@
-name: Terraform test build
+name: Terraform destroy
 on:
   workflow_call:
     inputs:
