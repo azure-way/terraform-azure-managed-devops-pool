@@ -1,0 +1,45 @@
+name: Terraform test build
+on:
+  workflow_call:
+    inputs:
+      backend_key:
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read        
+
+jobs:
+  terraform_build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: './terraform'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Install Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: Azure CLI Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.SPN_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.subscription_id }}          
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -backend-config="access_key=${{secrets.access_key}}" -backend-config="storage_account_name=${{secrets.storage_account_name}}" -backend-config="container_name=${{secrets.container_name}}" -backend-config="key=${{ inputs.backend_key }}"
+    
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply --auto-approve -input=false -var="spn-client-id=${{secrets.SPN_CLIENT_ID}}" -var="spn-client-secret=${{secrets.SPN_CLIENT_SECRET}}" -var="spn-tenant-id=${{secrets.AZURE_TENANT_ID}}" -var="subscription-id=${{secrets.subscription_id}}"
+        continue-on-error: false              

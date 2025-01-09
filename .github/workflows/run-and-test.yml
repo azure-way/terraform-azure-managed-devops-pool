@@ -1,0 +1,80 @@
+name: Azure Container Apps - Basic setup test
+run-name: Azure Container Apps - Basic setup test
+
+on:
+    schedule:
+        - cron: "15 06 * * 2"   # <=== Change this value    
+    workflow_dispatch:
+    
+env:
+  BadgeName: 'AzureManagedPool'
+  BadgeLabel: 'AzureManagedPool'
+
+      
+jobs:
+#   RunTerraform:
+#     uses: ./.github/workflows/terraform-execute.yml
+#     with:
+#       backend_key: 'managed-pool'
+#     secrets: inherit
+
+  ValidateAPI:
+    runs-on: ubuntu-latest
+    # needs: RunTerraform
+
+    steps:
+
+      - name: Trigger Azure DevOps Pipeline
+        if: success()
+        env:
+            ADO_PAT: ${{ secrets.ADO_PAT }}
+        run: |
+            ORGANIZATION="azure-way"
+            PROJECT="basic-pipeline"
+            PIPELINE_ID="1"
+
+            # Encode the PAT for authorization
+            AUTH_HEADER=$(echo -n ":$ADO_PAT" | base64)
+            
+            # Trigger the pipeline
+            curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Basic $AUTH_HEADER" \
+            -d '{}' \
+            "https://dev.azure.com/$ORGANIZATION/$PROJECT/_apis/pipelines/$PIPELINE_ID/runs?api-version=6.0-preview.1"
+            
+            echo "Pipeline triggered successfully."
+    #   - name: Get current date
+    #     id: date
+    #     run: echo "::set-output name=date::$(date +'%Y-%m-%d')"          
+
+    #   - name: Build-A-Badge-Success
+    #     if: success()
+    #     uses: peterrhodesdev/build-a-badge@v1.3.0
+    #     with:
+    #         token: ${{ secrets.GITHUB_TOKEN }}
+    #         filename: ${{ env.BadgeName}}
+    #         label: ${{ env.BadgeLabel }}
+    #         message: "build date: ${{ steps.date.outputs.date }}"
+    #         namedLogo: github
+    #         labelColor: "#008000"
+    #         color: "#3272d3"
+  
+    #   - name: Build-A-Badge-Failure
+    #     if: failure()
+    #     uses: peterrhodesdev/build-a-badge@v1.3.0
+    #     with:
+    #         token: ${{ secrets.GITHUB_TOKEN }}
+    #         filename: ${{ env.BadgeName}}
+    #         label: ${{ env.BadgeLabel }}
+    #         message: "build date: ${{ steps.date.outputs.date }}"
+    #         namedLogo: github
+    #         labelColor: "#FF0000"
+    #         color: "#3272d3"   
+
+#   RunDestroyTerraform:
+#     needs: ValidateAPI
+#     uses: ./.github/workflows/terraform-destroy.yml
+#     with:
+#       backend_key: 'managed-pool'
+#     secrets: inherit     
