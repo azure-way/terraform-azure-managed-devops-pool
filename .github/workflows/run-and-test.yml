@@ -1,5 +1,5 @@
-name: Azure Container Apps - Basic setup test
-run-name: Azure Container Apps - Basic setup test
+name: Azure Managed Pool - Basic setup test
+run-name: Azure Managed Pool - Basic setup test
 
 on:
     schedule:
