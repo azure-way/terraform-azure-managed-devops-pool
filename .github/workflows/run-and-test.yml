@@ -18,6 +18,7 @@ jobs:
       backend_key: 'managed-pool'
       ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
       pipeline_id: '1'
+      azure_devops_organization_name: 'azure-way'
     secrets: inherit
 
   ValidateAPI:
