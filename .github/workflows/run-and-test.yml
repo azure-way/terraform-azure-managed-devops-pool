@@ -41,7 +41,7 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: Basic $AUTH_HEADER" \
             -d '{}' \
-            "https://dev.azure.com/$ORGANIZATION/$PROJECT/_apis/pipelines/$PIPELINE_ID/runs?api-version=6.0-preview.1"
+            "https://dev.azure.com/$ORGANIZATION/$PROJECT/_apis/pipelines/$PIPELINE_ID/runs?api-version=7.1"
             
             echo "Pipeline triggered successfully."
     #   - name: Get current date
