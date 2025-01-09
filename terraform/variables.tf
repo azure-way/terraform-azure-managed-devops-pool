@@ -41,6 +41,11 @@ variable "azure_devops_project_names" {
   default     = ["basic-pipelines"]
 }
 
+variable "ado_project_id" {
+  type = string
+  description = "The Azure DevOps project ID"
+}
+
 variable "spn-client-id" {
   description = "Client ID of the service principal"
 }
@@ -55,4 +60,9 @@ variable "spn-tenant-id" {
 
 variable "subscription-id" {
 
+}
+
+variable "pipeline_id" {
+  description = "The ID of the pipeline"
+  
 }

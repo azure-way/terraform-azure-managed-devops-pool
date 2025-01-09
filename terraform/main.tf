@@ -105,6 +105,23 @@ resource "azurerm_role_assignment" "subnet_join" {
 
 }
 
+data "azuredevops_agent_queue" "this" {
+  project_id = var.ado_project_id
+  name       = module.managed_devops_pool.name
+}
+
+data "azuredevops_build_definition" "example" {
+  project_id = var.ado_project_id
+  name = "basic-pipelines"
+}
+
+resource "azuredevops_pipeline_authorization" "this" {
+  project_id  = var.ado_project_id
+  resource_id = data.azuredevops_agent_queue.this.id
+  type        = "queue"
+  pipeline_id = var.pipeline_id
+}
+
 # module "virtual_network" {
 #   source              = "Azure/avm-res-network-virtualnetwork/azurerm"
 #   version             = "0.4.0"
