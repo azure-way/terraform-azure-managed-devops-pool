@@ -28,11 +28,10 @@ jobs:
         if: success()
         env:
             ADO_PAT: ${{ secrets.ADO_PAT }}
+            ORGANIZATION: "azure-way"
+            PROJECT: "basic-pipelines"
+            PIPELINE_ID: "1"            
         run: |
-            ORGANIZATION="azure-way"
-            PROJECT="basic-pipelines"
-            PIPELINE_ID="1"
-
             # Encode the PAT for authorization
             AUTH_HEADER=$(echo -n ":$ADO_PAT" | base64)
             
@@ -43,7 +42,7 @@ jobs:
             -H "Accept: application/json" \
             -d '{"resources": {"repositories": {"self": {"refName": "refs/heads/main"}}}}' \
             "https://dev.azure.com/$ORGANIZATION/$PROJECT/_apis/pipelines/$PIPELINE_ID/runs?api-version=7.1"
-            
+             
             echo "Pipeline triggered successfully."
     #   - name: Get current date
     #     id: date
