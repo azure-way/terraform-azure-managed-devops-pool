@@ -23,30 +23,27 @@ jobs:
     # needs: RunTerraform
 
     steps:
-
-      - shell: bash
-        name: Trigger Azure DevOps Pipeline
-        if: success()
+      - name: Trigger Azure DevOps Pipeline
+        shell: bash  
         env:
-            ADO_PAT: ${{ secrets.ADO_PAT }}
+            ADO_PAT: ${{ secrets.ADO_PAT }}         # Must be defined in your repo’s “Settings → Secrets”
             ORGANIZATION: "azure-way"
             PROJECT: "basic-pipelines"
-            PIPELINE_ID: "1"            
+            PIPELINE_ID: "1"
         run: |
-            # Encode the PAT for authorization
-            AUTH_HEADER=$(echo -n ":Ftk6NUy3sWGfxJGDtKTLaS17Yueu0iuUS8jCYQCqvQdbG6Z7pBh2JQQJ99BAACAAAAAAu2VXAAASAZDO2dM8" | base64)
-            
-            # Trigger the pipeline
-            curl -v -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Basic $AUTH_HEADER" \
-            -H "Accept: application/json" \
-            -d '{"resources": {"repositories": {"self": {"refName": "refs/heads/main"}}}}' \
-            "https://dev.azure.com/azure-way/basic-pipelines/_apis/pipelines/1/runs?api-version=7.1"
-             
-            echo "Pipeline triggered successfully."
+            # Use -u :$ADO_PAT to send Basic Auth
+            curl -v \
+                -u :$ADO_PAT \
+                -X POST \
+                -H "Content-Type: application/json" \
+                -H "Accept: application/json" \
+                -d '{"resources": {"repositories": {"self": {"refName": "refs/heads/main"}}}}' \
+                "https://dev.azure.com/${ORGANIZATION}/${PROJECT}/_apis/pipelines/${PIPELINE_ID}/runs?api-version=7.1"    
+          
     #   - name: Get current date
+
     #     id: date
+    
     #     run: echo "::set-output name=date::$(date +'%Y-%m-%d')"          
 
     #   - name: Build-A-Badge-Success
