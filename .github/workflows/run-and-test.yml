@@ -34,13 +34,13 @@ jobs:
         ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
         pipeline_id: '3'
         azure_devops_organization_name: 'azure-way'      
-  ValidateManagedPoolUbuntu2404:
-    needs: RunTerraform
-    uses: ./.github/workflows/ado-pipeline-run.yml
-    with:
-        ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
-        pipeline_id: '5'
-        azure_devops_organization_name: 'azure-way'    
+#   ValidateManagedPoolUbuntu2404:
+#     needs: RunTerraform
+#     uses: ./.github/workflows/ado-pipeline-run.yml
+#     with:
+#         ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
+#         pipeline_id: '5'
+#         azure_devops_organization_name: 'azure-way'    
   ValidateManagedPoolWin2019:
     needs: RunTerraform
     uses: ./.github/workflows/ado-pipeline-run.yml
@@ -60,7 +60,7 @@ jobs:
     needs: 
         - ValidateManagedPoolUbuntu2004
         - ValidateManagedPoolUbuntu2204
-        - ValidateManagedPoolUbuntu2404
+        # - ValidateManagedPoolUbuntu2404
         - ValidateManagedPoolWin2019
         - ValidateManagedPoolWin2022
     runs-on: ubuntu-latest

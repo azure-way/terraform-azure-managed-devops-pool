@@ -170,13 +170,6 @@ module "managed_devops_pool" {
       ]
     },
     {
-      well_known_image_name = "ubuntu-24.04/latest"
-      aliases = [
-        "ubuntu-24.04/latest",
-        "ubuntu-24.04"
-      ]
-    },    
-    {
       well_known_image_name = "windows-2019/latest"
       aliases = [
         "windows-2019/latest",
