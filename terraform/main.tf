@@ -112,10 +112,11 @@ data "azuredevops_build_definition" "example" {
 }
 
 resource "azuredevops_pipeline_authorization" "this" {
+  for_each = toset(var.pipeline_ids)
   project_id  = var.ado_project_id
   resource_id = data.azuredevops_agent_queue.this.id
   type        = "queue"
-  pipeline_id = var.pipeline_id
+  pipeline_id = each.key
 }
 
 resource "azurerm_dev_center" "this" {
