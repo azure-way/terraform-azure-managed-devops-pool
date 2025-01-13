@@ -71,5 +71,5 @@ variable "subscription-id" {
 
 variable "pipeline_ids" {
   description = "The ID of the pipeline"
-  type        = list(number)
+  type        = list(string)
 }
