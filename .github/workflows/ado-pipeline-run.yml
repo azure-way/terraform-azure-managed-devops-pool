@@ -1,0 +1,88 @@
+name: Run and test ADO Pipeline
+on:
+  workflow_call:
+    inputs:
+      ado_project_id:
+        required: true
+        type: string
+      pipeline_id:
+        required: true
+        type: string
+      azure_devops_organization_name:
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read    
+
+jobs:
+  run_test_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Azure DevOps Pipeline
+        shell: bash  
+        env:
+            ADO_PAT: ${{ secrets.ADO_PAT }}         # Must be defined in your repo’s “Settings → Secrets”
+            ORGANIZATION: ${{ inputs.azure_devops_organization_name }}
+            PROJECT: ${{ inputs.ado_project_id }}
+            PIPELINE_ID: ${{ inputs.pipeline_id }}
+        run: |
+          # 1. Trigger the pipeline
+          echo "Triggering Azure DevOps pipeline ${PIPELINE_ID}..."
+          trigger_response=$(curl -s \
+            -u :$ADO_PAT \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d '{"resources": {"repositories": {"self": {"refName": "refs/heads/main"}}}}' \
+            "https://dev.azure.com/${ORGANIZATION}/${PROJECT}/_apis/pipelines/${PIPELINE_ID}/runs?api-version=7.1")
+
+          # 2. Extract the 'id' field from the JSON response
+          run_id=$(echo "$trigger_response" | jq -r '.id')
+          echo "Azure DevOps pipeline run id is: $run_id"
+
+          # If run_id is empty, fail immediately
+          if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
+            echo "Error: Could not parse run_id from pipeline trigger response."
+            echo "Full response: $trigger_response"
+            exit 1
+          fi
+
+          # 3. Poll the pipeline status until it completes
+          echo "Waiting for pipeline run $run_id to complete..."
+          max_attempts=60    # ~20 mins if we sleep 20s each loop
+          attempt=1
+
+          while [ $attempt -le $max_attempts ]
+          do
+            run_status_json=$(curl -s \
+              -u :$ADO_PAT \
+              -H "Accept: application/json" \
+              "https://dev.azure.com/${ORGANIZATION}/${PROJECT}/_apis/pipelines/${PIPELINE_ID}/runs/${run_id}?api-version=7.1")
+
+            # Example fields: .state can be "inProgress", "completed", etc.
+            #                 .result can be "succeeded", "canceled", "failed" once completed
+            state=$(echo "$run_status_json" | jq -r '.state')
+            result=$(echo "$run_status_json" | jq -r '.result')
+
+            echo "Attempt #$attempt - state: $state, result: $result"
+
+            if [ "$state" = "completed" ]; then
+              # 4. Check final result
+              if [ "$result" = "succeeded" ]; then
+                echo "Azure DevOps pipeline completed successfully!"
+                exit 0
+              else
+                echo "Azure DevOps pipeline failed or was canceled. Result: $result"
+                exit 1
+              fi
+            fi
+
+            sleep 20
+            ((attempt++))
+          done
+
+          # If we exit the loop, it means pipeline hasn't completed in time
+          echo "Azure DevOps pipeline did not complete within the allotted time."
+          exit 1

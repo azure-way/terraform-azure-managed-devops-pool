@@ -20,7 +20,7 @@ variable "maximum_concurrency" {
   type        = number
   description = "The maximum number of concurrent jobs that can run on the pool."
   default     = 4
-  
+
 }
 variable "address_space" {
   type        = list(string)
@@ -45,11 +45,11 @@ variable "azure_devops_build_definition_name" {
   type        = string
   description = "The name of the build definition."
   default     = "basic-pipelines"
-  
+
 }
 
 variable "ado_project_id" {
-  type = string
+  type        = string
   description = "The Azure DevOps project ID"
 }
 
@@ -71,5 +71,5 @@ variable "subscription-id" {
 
 variable "pipeline_id" {
   description = "The ID of the pipeline"
-  
+
 }

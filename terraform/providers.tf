@@ -1,10 +1,6 @@
 terraform {
   required_version = ">= 1.9"
   required_providers {
-    # azapi = {
-    #   source  = "azure/azapi"
-    #   version = "~> 1.14"
-    # }
     azuread = {
       source  = "hashicorp/azuread"
       version = "~> 3.0.2"
@@ -23,20 +19,8 @@ terraform {
     }
   }
 
-  backend "azurerm" { }  
+  backend "azurerm" {}
 }
-
-# locals {
-#   resource_providers_to_register = {
-#     dev_center = {
-#       resource_provider = "Microsoft.DevCenter"
-#     }
-#     devops_infrastructure = {
-#       resource_provider = "Microsoft.DevOpsInfrastructure"
-#     }
-#   }
-# }
-
 
 provider "azuredevops" {
   org_service_url = local.azure_devops_organization_url

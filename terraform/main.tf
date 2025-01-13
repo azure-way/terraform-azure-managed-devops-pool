@@ -92,14 +92,12 @@ resource "azurerm_role_assignment" "reader" {
   principal_id         = data.azuread_service_principal.this.object_id
   role_definition_name = "Reader"
   scope                = azurerm_virtual_network.this.id
-
 }
 
 resource "azurerm_role_assignment" "subnet_join" {
   principal_id       = data.azuread_service_principal.this.object_id
   role_definition_id = azurerm_role_definition.this.role_definition_resource_id
   scope              = azurerm_virtual_network.this.id
-
 }
 
 data "azuredevops_agent_queue" "this" {
@@ -171,6 +169,13 @@ module "managed_devops_pool" {
         "ubuntu-22.04"
       ]
     },
+    {
+      well_known_image_name = "ubuntu-24.04/latest"
+      aliases = [
+        "ubuntu-24.04/latest",
+        "ubuntu-24.04"
+      ]
+    },    
     {
       well_known_image_name = "windows-2019/latest"
       aliases = [
