@@ -26,7 +26,8 @@ jobs:
     with:
         ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
         pipeline_id: '4'
-        azure_devops_organization_name: 'azure-way'       
+        azure_devops_organization_name: 'azure-way'   
+    secrets: inherit            
   ValidateManagedPoolUbuntu2204:
     needs: RunTerraform
     uses: ./.github/workflows/ado-pipeline-run.yml
@@ -34,6 +35,7 @@ jobs:
         ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
         pipeline_id: '3'
         azure_devops_organization_name: 'azure-way'      
+    secrets: inherit                    
 #   ValidateManagedPoolUbuntu2404:
 #     needs: RunTerraform
 #     uses: ./.github/workflows/ado-pipeline-run.yml
@@ -47,7 +49,8 @@ jobs:
     with:
         ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
         pipeline_id: '6'
-        azure_devops_organization_name: 'azure-way'     
+        azure_devops_organization_name: 'azure-way'  
+    secrets: inherit                       
   ValidateManagedPoolWin2022:
     needs: RunTerraform
     uses: ./.github/workflows/ado-pipeline-run.yml
@@ -55,7 +58,7 @@ jobs:
         ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
         pipeline_id: '7'
         azure_devops_organization_name: 'azure-way'                                   
-
+    secrets: inherit            
   BuildBadge:
     needs: 
         - ValidateManagedPoolUbuntu2004
