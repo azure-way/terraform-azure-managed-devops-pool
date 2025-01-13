@@ -8,7 +8,7 @@ on:
       ado_project_id:
         required: true
         type: string
-      pipeline_id:
+      pipeline_ids:
         required: true
         type: string
       azure_devops_organization_name:
@@ -50,5 +50,5 @@ jobs:
     
       - name: Terraform Destroy
         id: destroy
-        run: terraform destroy --auto-approve -input=false -var="spn-client-id=${{secrets.SPN_CLIENT_ID}}" -var="spn-client-secret=${{secrets.SPN_CLIENT_SECRET}}" -var="spn-tenant-id=${{secrets.AZURE_TENANT_ID}}" -var="subscription-id=${{secrets.subscription_id}}" -var="ado_project_id=${{ inputs.ado_project_id }}" -var="pipeline_id=${{ inputs.pipeline_id }}" -var="azure_devops_organization_name=${{ inputs.azure_devops_organization_name }}"
+        run: terraform destroy --auto-approve -input=false -var="spn-client-id=${{secrets.SPN_CLIENT_ID}}" -var="spn-client-secret=${{secrets.SPN_CLIENT_SECRET}}" -var="spn-tenant-id=${{secrets.AZURE_TENANT_ID}}" -var="subscription-id=${{secrets.subscription_id}}" -var="ado_project_id=${{ inputs.ado_project_id }}" -var="pipeline_ids=${{ inputs.pipeline_ids }}" -var="azure_devops_organization_name=${{ inputs.azure_devops_organization_name }}"
         continue-on-error: false            
