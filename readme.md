@@ -1,6 +1,6 @@
 # Azure Managed DevOps Pool with Terraform
 
-This repository provides a fully functional Terraform script for creating an **Azure Managed DevOps Pool**. By leveraging Microsoft-hosted runner images (or your own custom images), you can streamline your CI/CD pipelines without maintaining Azure Virtual Machine Scale Sets. For more details and context, check out the [article on AzureWay.cloud](https://azureway.cloud).
+This repository provides a fully functional Terraform script for creating an **Azure Managed DevOps Pool**. By leveraging Microsoft-hosted runner images (or your own custom images), you can streamline your CI/CD pipelines without maintaining Azure Virtual Machine Scale Sets. For more details and context, check out the [article on AzureWay.cloud](https://azureway.cloud/azure-managed-devops-pool-terraform/).
 
 ## Prerequisites
 - Adequate **Resource Quotas** in your Azure subscription. The default setting is to create 4 agents, so you need at least 8 vCPUs
