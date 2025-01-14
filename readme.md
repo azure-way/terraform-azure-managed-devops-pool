@@ -35,6 +35,5 @@ This repository provides a fully functional Terraform script for creating an **A
 5. **Apply the changes**:
 
     ```bash
-    terraform apply \
-      -var="spn-client-secret=$SPN_CLIENT_SECRET}}"
+    terraform apply -var="spn-client-secret=$SPN_CLIENT_SECRET}}"
     ```
