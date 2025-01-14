@@ -18,7 +18,7 @@ This repository provides a fully functional Terraform script for creating an **A
     azure_devops_organization_name = "ADO_ORGANIZATION"
     subscription-id                = "SUBSCRIPTION_ID"
     ado_project_id                 = "ADO_PROJECT_ID"
-    pipeline_id                    = PIPELINE_ID
+    pipeline_ids                   = ["PIPELINE_ID"]
     ```
 3. **Initialize Terraform**:
 
