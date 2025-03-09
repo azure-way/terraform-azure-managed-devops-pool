@@ -1,0 +1,66 @@
+name: Azure Managed Pool - Schedule Agent setup test
+run-name: Azure Managed Pool - Schedule Agent setup test
+
+on:
+    schedule:
+        - cron: "15 06 * * 2" 
+    workflow_dispatch:
+    
+env:
+  BadgeName: 'AzureManagedPool-ScheduleAgent'
+  BadgeLabel: 'AzureManagedPool-ScheduleAgent'
+
+jobs:
+  RunTerraform:
+    uses: ./.github/workflows/terraform-execute.yml
+    with:
+      backend_key: 'managed-pool-schedule-agent'
+      ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
+      pipeline_ids: '["3","4","6","7"]'
+      azure_devops_organization_name: 'azure-way'
+      working_directory: './terraform/agents_schedule'
+    secrets: inherit
+
+  BuildBadge:
+    needs: 
+        - RunTerraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"          
+
+      - name: Build-A-Badge-Success
+        if: success()
+        uses: peterrhodesdev/build-a-badge@v1.3.0
+        with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            filename: ${{ env.BadgeName}}
+            label: ${{ env.BadgeLabel }}
+            message: "build date: ${{ steps.date.outputs.date }}"
+            namedLogo: github
+            labelColor: "#008000"
+            color: "#3272d3"
+  
+      - name: Build-A-Badge-Failure
+        if: failure()
+        uses: peterrhodesdev/build-a-badge@v1.3.0
+        with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            filename: ${{ env.BadgeName}}
+            label: ${{ env.BadgeLabel }}
+            message: "build date: ${{ steps.date.outputs.date }}"
+            namedLogo: github
+            labelColor: "#FF0000"
+            color: "#3272d3"   
+
+  RunDestroyTerraform:
+    needs: BuildBadge
+    uses: ./.github/workflows/terraform-destroy.yml
+    with:
+        backend_key: 'managed-pool-schedule-agent'
+        ado_project_id: 'd3c6c8d1-0ccc-4dc7-9b3a-1d38bbce684c'
+        pipeline_ids: '["3","4","6","7"]'
+        azure_devops_organization_name: 'azure-way'
+        working_directory: './terraform/agents_schedule'
+    secrets: inherit     
