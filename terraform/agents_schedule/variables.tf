@@ -76,10 +76,6 @@ variable "pipeline_ids" {
 
 variable "agent_profile_resource_predictions" {
   description = "Values for agents scheduling"
-  type        = map(object({
-    time_zone = string
-    days_data = list(map(string))
-  }))
   default  = {
     time_zone = "UTC"
     days_data = [
