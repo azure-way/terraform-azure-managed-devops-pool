@@ -187,6 +187,7 @@ module "managed_devops_pool" {
   ]
   enable_telemetry = var.enable_telemetry
 
+  agent_profile_resource_prediction_profile = "Manual"
   agent_profile_resource_predictions_manual = var.agent_profile_resource_predictions
 
   depends_on = [time_sleep.wait_1_minute]
